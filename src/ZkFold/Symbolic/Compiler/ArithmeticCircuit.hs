@@ -55,7 +55,7 @@ applyArgs r args = execState (apply args) r
 --
 -- TODO: Implement this.
 optimize :: ArithmeticCircuit a -> ArithmeticCircuit a
-optimize = undefined
+optimize = id
 
 ----------------------------------- Information -----------------------------------
 
