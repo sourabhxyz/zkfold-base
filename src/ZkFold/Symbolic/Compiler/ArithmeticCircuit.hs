@@ -57,6 +57,15 @@ applyArgs r args = execState (apply args) r
 optimize :: ArithmeticCircuit a -> ArithmeticCircuit a
 optimize = id
 
+findConstants
+  :: ArithmeticCircuit a
+  -> [ ( Natural -- ^ constraint key
+       , Natural -- ^ variable key
+       , a -- ^ constant value
+       )
+     ]
+findConstants = undefined
+
 ----------------------------------- Information -----------------------------------
 
 -- | Calculates the number of constraints in the system.
