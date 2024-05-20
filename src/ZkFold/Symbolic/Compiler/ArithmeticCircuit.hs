@@ -31,7 +31,7 @@ import           Control.Monad.State                                 (execState)
 import           Data.Map                                            hiding (drop, foldl, foldr, map, null, splitAt,
                                                                       take)
 import           Numeric.Natural                                     (Natural)
-import           Prelude                                             hiding (Num (..), drop, length, product, splitAt,
+import           Prelude                                             hiding (Num (..), drop, filter, length, product, splitAt,
                                                                       sum, take, (!!), (^))
 import           Test.QuickCheck                                     (Arbitrary, Property, conjoin, property, vector,
                                                                       withMaxSuccess, (===))
@@ -58,13 +58,20 @@ optimize :: ArithmeticCircuit a -> ArithmeticCircuit a
 optimize = id
 
 findConstants
-  :: ArithmeticCircuit a
+  :: forall a. ArithmeticCircuit a
   -> [ ( Natural -- ^ constraint key
        , Natural -- ^ variable key
        , a -- ^ constant value
        )
      ]
-findConstants = undefined
+findConstants circuit =
+  let
+    isConstant :: Constraint a -> Bool
+    isConstant _ = True
+    constantsMap :: Map Natural (Constraint a)
+    constantsMap = filter isConstant (acSystem circuit)
+  in
+    undefined
 
 ----------------------------------- Information -----------------------------------
 
