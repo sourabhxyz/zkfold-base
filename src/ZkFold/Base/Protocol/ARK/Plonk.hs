@@ -21,6 +21,7 @@ import           ZkFold.Base.Algebra.Basic.Permutations      (fromCycles, fromPe
 import           ZkFold.Base.Algebra.EllipticCurve.BLS12_381
 import           ZkFold.Base.Algebra.EllipticCurve.Class
 import           ZkFold.Base.Algebra.Polynomials.Univariate  hiding (qr)
+import           ZkFold.Base.Data.Vector                     (item)
 import           ZkFold.Base.Protocol.ARK.Plonk.Internal     (getParams, toPlonkArithmetization)
 import           ZkFold.Base.Protocol.Commitment.KZG         (com)
 import           ZkFold.Base.Protocol.NonInteractiveProof
@@ -37,14 +38,14 @@ type G2 = Point BLS12_381_G2
     NOTE: we need to parametrize the type of transcripts because we use BuiltinByteString on-chain and ByteString off-chain.
     Additionally, we don't want this library to depend on Cardano libraries.
 -}
-data Plonk (d :: Natural) t = Plonk F F F (Map Natural F) (ArithmeticCircuit F) F
+data Plonk (d :: Natural) t = Plonk F F F (Map Natural F) (ArithmeticCircuit 1 F) F
     deriving (Show)
 -- TODO (Issue #25): make a proper implementation of Arbitrary
 instance Arbitrary (Plonk d t) where
     arbitrary = do
         let (omega, k1, k2) = getParams 5
         ac <- arbitrary
-        Plonk omega k1 k2 (singleton (acOutput ac) 15) ac <$> arbitrary
+        Plonk omega k1 k2 (singleton (item $ acOutput ac) 15) ac <$> arbitrary
 
 type PlonkPermutationSize d = 3 * d
 
@@ -139,7 +140,7 @@ instance forall d t .
 
     setup :: Plonk d t -> Setup (Plonk d t)
     setup (Plonk omega k1 k2 inputs ac x) =
-        let wmap = acWitness $ mapVarArithmeticCircuit ac
+        let wmap = witnessGenerator $ mapVarArithmeticCircuit ac
             (qlAC, qrAC, qoAC, qmAC, qcAC, a, b, c) = toPlonkArithmetization inputs ac
             wPub = V.fromList $ map negate $ elems inputs
 

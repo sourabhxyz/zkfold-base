@@ -98,14 +98,14 @@ addPublicInput i _ ps = var i : ps
 removeConstantVariable :: (Eq c, Field c, Scale c c, FromConstant c c) => Polynomial' c -> Polynomial' c
 removeConstantVariable = evalPolynomial evalMapM (\x -> if x == 0 then one else var x)
 
-toPlonkArithmetization :: forall a . KnownNat a => Map Natural F -> ArithmeticCircuit F
+toPlonkArithmetization :: forall a . KnownNat a => Map Natural F -> ArithmeticCircuit 1 F
     -> (PolyVec F a, PolyVec F a, PolyVec F a, PolyVec F a, PolyVec F a, PolyVec F a, PolyVec F a, PolyVec F a)
 toPlonkArithmetization inputs ac =
     let f (x0, x1, x2, x3, x4, x5, x6, x7) = [x0, x1, x2, x3, x4, x5, x6, x7]
-        vars    = nubOrd $ sort $ 0 : concatMap (toList . variables) (elems $ acSystem ac)
+        vars    = nubOrd $ sort $ 0 : concatMap (toList . variables) (elems $ constraintSystem ac)
         ac'     = mapVarArithmeticCircuit ac
         inputs' = mapVarWitness vars inputs
-        system  = foldrWithKey addPublicInput (elems $ acSystem ac') inputs'
+        system  = foldrWithKey addPublicInput (elems $ constraintSystem ac') inputs'
 
     in case map (toPolyVec . V.fromList) $ transpose $ map (f . toPlonkConstraint . removeConstantVariable) system of
             [ql, qr, qo, qm, qc, a, b, c] -> (ql, qr, qo, qm, qc, a, b, c)
