@@ -47,8 +47,10 @@ import           ZkFold.Base.Algebra.Polynomials.Multivariate        (evalMapM, 
 import           ZkFold.Base.Data.Vector                             (Vector)
 import           ZkFold.Prelude                                      (length)
 import           ZkFold.Symbolic.Compiler.ArithmeticCircuit.Instance ()
-import           ZkFold.Symbolic.Compiler.ArithmeticCircuit.Internal (Arithmetic, ArithmeticCircuit (..), Circuit (..), constraintSystem, inputVariables, varOrder, witnessGenerator,
-                                                                      Constraint, apply, eval, forceZero)
+import           ZkFold.Symbolic.Compiler.ArithmeticCircuit.Internal (Arithmetic, ArithmeticCircuit (..), Circuit (..),
+                                                                      Constraint, apply, constraintSystem, eval,
+                                                                      forceZero, inputVariables, varOrder,
+                                                                      witnessGenerator)
 import           ZkFold.Symbolic.Compiler.ArithmeticCircuit.Map
 
 --------------------------------- High-level functions --------------------------------

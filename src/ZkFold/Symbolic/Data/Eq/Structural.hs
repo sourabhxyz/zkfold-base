@@ -11,9 +11,9 @@ instance SymbolicData a n x => Eq (Bool (ArithmeticCircuit n a)) (Structural x) 
     Structural x == Structural y =
         let x' = pieces @a x
             y' = pieces y
-         in x' == y' 
+         in x' == y'
 
     Structural x /= Structural y =
         let x' = pieces @a x
             y' = pieces y
-         in not (x' == y') 
+         in not (x' == y')
